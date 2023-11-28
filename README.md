@@ -1,53 +1,27 @@
-# @metamask/template-snap-monorepo
+# Lens snaps
 
-This repository demonstrates how to develop a snap with TypeScript. For detailed
-instructions, see [the MetaMask documentation](https://docs.metamask.io/guide/snaps.html#serving-a-snap-to-your-local-environment).
+This repository contains a simple implementation for connecting snaps to the Lens Apolo API.
 
-MetaMask Snaps is a system that allows anyone to safely expand the capabilities
-of MetaMask. A _snap_ is a program that we run in an isolated environment that
-can customize the wallet experience.
+## Features
 
-## Snaps is pre-release software
+* Display the Lens profiles connected to your account addresses.
 
-To interact with (your) Snaps, you will need to install [MetaMask Flask](https://metamask.io/flask/),
-a canary distribution for developers that provides access to upcoming features.
+* Display the Lens profiles connected to the `to` and `from` addresses in your transactions.
 
-## Getting Started
+### Notice
 
-Clone the template-snap repository [using this template](https://github.com/MetaMask/template-snap-monorepo/generate)
-and set up the development environment:
+This is a work in progress. The code is not audited and should not be used in production.
 
-```shell
-yarn install && yarn start
-```
+Currently the integration is impossible to work.
 
-## Cloning
+Apolo doesn't know how to handle requests from the [sandbox iframe environment](https://docs.metamask.io/snaps/reference/permissions/#same-origin-policy-and-cors) yet.
 
-This repository contains GitHub Actions that you may find useful, see
-`.github/workflows` and [Releasing & Publishing](https://github.com/MetaMask/template-snap-monorepo/edit/main/README.md#releasing--publishing)
-below for more information.
+When the snap deploys to production, the Origin parameter will not be null anymore, and this should work eventually.
 
-If you clone or create this repository outside the MetaMask GitHub organization,
-you probably want to run `./scripts/cleanup.sh` to remove some files that will
-not work properly outside the MetaMask GitHub organization.
+> fetch() requests in a Snap are bound by the browser's same-origin policy. Since Snap code is executed in an iframe with the sandbox property, the browser sends an Origin header with the value null with outgoing requests. For the Snap to be able to read the response, the server must send an Access-Control-Allow-Origin CORS header with the value * or null in the response.
 
-If you don't wish to use any of the existing GitHub actions in this repository,
-simply delete the `.github/workflows` directory.
+## Credits
 
-## Contributing
+This project was bootstrapped with [gas-estimation-snap](https://docs.metamask.io/snaps/tutorials/gas-estimation/)
 
-### Testing and Linting
-
-Run `yarn test` to run the tests once.
-
-Run `yarn lint` to run the linter, or run `yarn lint:fix` to run the linter and
-fix any automatically fixable issues.
-
-### Using NPM packages with scripts
-
-Scripts are disabled by default for security reasons. If you need to use NPM
-packages with scripts, you can run `yarn allow-scripts auto`, and enable the
-script in the `lavamoat.allowScripts` section of `package.json`.
-
-See the documentation for [@lavamoat/allow-scripts](https://github.com/LavaMoat/LavaMoat/tree/main/packages/allow-scripts)
-for more information.
+Thanks for Metamask team for the great documentation and tutorials, and for Consensys team for the amazing Ambassadors program.

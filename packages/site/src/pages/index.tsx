@@ -7,6 +7,7 @@ import {
   ReconnectButton,
   SendHelloButton,
   Card,
+  ViewLensButton,
 } from '../components';
 import { defaultSnapOrigin } from '../config';
 import { MetamaskActions, MetaMaskContext } from '../hooks';
@@ -15,6 +16,7 @@ import {
   getSnap,
   isLocalSnap,
   sendHello,
+  sendLensRequest,
   shouldDisplayReconnectButton,
 } from '../utils';
 
@@ -133,13 +135,22 @@ const Index = () => {
     }
   };
 
+  const handleSendLensClick = async () => {
+    try {
+      await sendLensRequest();
+    } catch (error) {
+      console.error(error);
+      dispatch({ type: MetamaskActions.SetError, payload: error });
+    }
+  };
+
   return (
     <Container>
       <Heading>
-        Welcome to <Span>template-snap</Span>
+        Welcome to <Span>Lens Snaps</Span>
       </Heading>
       <Subtitle>
-        Get started by editing <code>src/index.ts</code>
+        Integrating Lens to Metamask Snaps
       </Subtitle>
       <CardContainer>
         {state.error && (
@@ -208,6 +219,21 @@ const Index = () => {
             Boolean(state.installedSnap) &&
             !shouldDisplayReconnectButton(state.installedSnap)
           }
+        />
+        <Card
+          content={{
+            title: 'View my lens handle',
+            description:
+              'Display your lens handle within a confirmation screen in MetaMask.',
+            button: (
+              <ViewLensButton
+                onClick={handleSendLensClick}
+                disabled={!state.installedSnap}
+              />
+            ),
+          }}
+          disabled={!state.installedSnap}
+          fullWidth={isMetaMaskReady && Boolean(state.installedSnap)}
         />
         <Notice>
           <p>

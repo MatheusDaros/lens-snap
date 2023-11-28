@@ -3,13 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "description": "",
-  "homepage": "https://github.com/MetaMask/template-snap-monorepo#readme",
+  "homepage": "https://github.com/MatheusDaros/lens-snap",
   "bugs": {
-    "url": "https://github.com/MetaMask/template-snap-monorepo/issues"
+    "url": "https://github.com/MatheusDaros/lens-snap/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/MetaMask/template-snap-monorepo.git"
+    "url": "git+https://github.com/MatheusDaros/lens-snap.git"
   },
   "license": "(MIT-0 OR Apache-2.0)",
   "author": "",
@@ -57,5 +57,8 @@
       "@lavamoat/preinstall-always-fail": false,
       "sharp": true
     }
+  },
+  "dependencies": {
+    "@metamask/keyring-api": "^1.1.0"
   }
 }
