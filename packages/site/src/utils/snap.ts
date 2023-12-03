@@ -2,7 +2,6 @@ import type { MetaMaskInpageProvider } from '@metamask/providers';
 
 import { defaultSnapOrigin } from '../config';
 import type { GetSnapsResponse, Snap } from '../types';
-import { KeyringSnapRpcClient } from '@metamask/keyring-api';
 
 /**
  * Get the installed snaps in MetaMask.
@@ -65,16 +64,22 @@ export const sendHello = async () => {
   });
 };
 
-/**
- * Invoke the "lens" method from the example snap.
- */
-
-export const sendLensRequest = async () => {
+export const sendLensProfileRequest = async () => {
   await window.ethereum.request({
     method: 'wallet_invokeSnap',
     params: {
       snapId: defaultSnapOrigin,
-      request: { method: 'lens_getUser' },
+      request: { method: 'lens_getProfiles' },
+    },
+  });
+};
+
+export const sendLensHandleRequest = async () => {
+  await window.ethereum.request({
+    method: 'wallet_invokeSnap',
+    params: {
+      snapId: defaultSnapOrigin,
+      request: { method: 'lens_getHandles' },
     },
   });
 };

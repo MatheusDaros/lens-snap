@@ -7,7 +7,8 @@ import {
   ReconnectButton,
   SendHelloButton,
   Card,
-  ViewLensButton,
+  ViewLensHandleButton,
+  ViewLensProfileButton,
 } from '../components';
 import { defaultSnapOrigin } from '../config';
 import { MetamaskActions, MetaMaskContext } from '../hooks';
@@ -16,7 +17,8 @@ import {
   getSnap,
   isLocalSnap,
   sendHello,
-  sendLensRequest,
+  sendLensHandleRequest,
+  sendLensProfileRequest,
   shouldDisplayReconnectButton,
 } from '../utils';
 
@@ -135,9 +137,18 @@ const Index = () => {
     }
   };
 
-  const handleSendLensClick = async () => {
+  const handleSendLensHandleClick = async () => {
     try {
-      await sendLensRequest();
+      await sendLensHandleRequest();
+    } catch (error) {
+      console.error(error);
+      dispatch({ type: MetamaskActions.SetError, payload: error });
+    }
+  };
+
+  const handleSendLensProfileClick = async () => {
+    try {
+      await sendLensProfileRequest();
     } catch (error) {
       console.error(error);
       dispatch({ type: MetamaskActions.SetError, payload: error });
@@ -149,9 +160,7 @@ const Index = () => {
       <Heading>
         Welcome to <Span>Lens Snaps</Span>
       </Heading>
-      <Subtitle>
-        Integrating Lens to Metamask Snaps
-      </Subtitle>
+      <Subtitle>Integrating Lens to Metamask Snaps</Subtitle>
       <CardContainer>
         {state.error && (
           <ErrorMessage>
@@ -222,12 +231,27 @@ const Index = () => {
         />
         <Card
           content={{
-            title: 'View my lens handle',
+            title: 'View my lens handles',
             description:
-              'Display your lens handle within a confirmation screen in MetaMask.',
+              'Display your lens handles within a confirmation screen in MetaMask.',
             button: (
-              <ViewLensButton
-                onClick={handleSendLensClick}
+              <ViewLensHandleButton
+                onClick={handleSendLensHandleClick}
+                disabled={!state.installedSnap}
+              />
+            ),
+          }}
+          disabled={!state.installedSnap}
+          fullWidth={isMetaMaskReady && Boolean(state.installedSnap)}
+        />
+        <Card
+          content={{
+            title: 'View my lens profiles',
+            description:
+              'Display your lens profiles within a confirmation screen in MetaMask.',
+            button: (
+              <ViewLensProfileButton
+                onClick={handleSendLensProfileClick}
                 disabled={!state.installedSnap}
               />
             ),
