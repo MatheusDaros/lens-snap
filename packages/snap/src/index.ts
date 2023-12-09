@@ -37,11 +37,6 @@ async function getProfiles(addresses: string[]) {
   return response.text();
 }
 
-async function getFees() {
-  const response = await fetch('https://beaconcha.in/api/v1/execution/gasnow');
-  return response.text();
-}
-
 /**
  * Handle incoming JSON-RPC requests, sent through `wallet_invokeSnap`.
  *
@@ -57,19 +52,6 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
   request,
 }) => {
   switch (request.method) {
-    case 'hello':
-      return getFees().then((fees) => {
-        return snap.request({
-          method: 'snap_dialog',
-          params: {
-            type: 'alert',
-            content: panel([
-              text(`Hello, **${origin}**!`),
-              text(`Current gas fee estimates: ${fees}`),
-            ]),
-          },
-        });
-      });
     case 'lens_getProfiles':
       return ethereum
         .request({ method: 'eth_requestAccounts' })
@@ -78,12 +60,10 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
             snap.request({
               method: 'snap_dialog',
               params: {
-                type: 'confirmation',
+                type: 'alert',
                 content: panel([
                   text(`Hello, **${origin}**!`),
-                  text(
-                    `These are your Lens Profiles: ${JSON.stringify(response)}`,
-                  ),
+                  text(displayProfiles(response)),
                 ]),
               },
             }),
@@ -97,12 +77,10 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
             snap.request({
               method: 'snap_dialog',
               params: {
-                type: 'confirmation',
+                type: 'alert',
                 content: panel([
                   text(`Hello, **${origin}**!`),
-                  text(
-                    `These are your Lens Profiles: ${JSON.stringify(response)}`,
-                  ),
+                  text(displayHandles(response)),
                 ]),
               },
             }),
@@ -122,3 +100,69 @@ export const onTransaction: OnTransactionHandler = async ({ transaction }) => {
     ]),
   };
 };
+
+function displayHandles(response: string | string[]) {
+  const parsedResponse =
+    typeof response === 'string'
+      ? [JSON.parse(response)]
+      : response.map((r) => JSON.parse(r));
+  if (parsedResponse.length === 0) {
+    return 'No handles found';
+  }
+  const message = `Found ${parsedResponse.length} handle${
+    parsedResponse.length > 1 ? 's' : ''
+  }:\n ${parsedResponse
+    .map(
+      (handle, index) =>
+        `${++index}: ${
+          handle.data.ownedHandles.items[0].suggestedFormatted.localName
+        }\n (${handle.data.ownedHandles.items[0].suggestedFormatted.full})`,
+    )
+    .join('\n')}`;
+  return message;
+}
+
+function displayProfiles(response: string) {
+  const parsedResponse = JSON.parse(response);
+  const items = parsedResponse.data.profiles.items;
+  if (items.length === 0) {
+    return 'No handles found';
+  }
+  const message = `Found ${items.length} profile${
+    items.length > 1 ? 's' : ''
+  }:\n ${items
+    .map(
+      (profile: any, index: any) =>
+        `${++index}:\n Name: ${profile.metadata.displayName}\nBio: ${
+          profile.metadata.bio
+        }\nPicture: ${profile.metadata.picture.raw.uri}\nCover Picture: ${
+          profile.metadata.coverPicture.raw.uri
+        }\nHandle: ${
+          profile.handle.suggestedFormatted.full
+        }\nHandle Contract: ${
+          profile.handle.linkedTo.contract.address
+        }\nHandle NFT Token ID: ${
+          profile.handle.linkedTo.nftTokenId
+        }\nHandle Owned By: ${profile.handle.ownedBy}\nHandle ID: ${
+          profile.handle.id
+        }\nHandle Full Handle: ${
+          profile.handle.fullHandle
+        }\nHandle Namespace: ${profile.handle.namespace}\nHandle Local Name: ${
+          profile.handle.localName
+        }\nHandle Suggested Formatted Full: ${
+          profile.handle.suggestedFormatted.full
+        }\nHandle Suggested Formatted Local Name: ${
+          profile.handle.suggestedFormatted.localName
+        }\nHandle Linked To Contract Address: ${
+          profile.handle.linkedTo.contract.address
+        }\nHandle Linked To Contract Chain ID: ${
+          profile.handle.linkedTo.contract.chainId
+        }\nHandle Linked To NFT Token ID: ${
+          profile.handle.linkedTo.nftTokenId
+        }\nHandle Owned By: ${profile.handle.ownedBy}\nSignless: ${
+          profile.signless
+        }\nSponsor: ${profile.sponsor}\n`,
+    )
+    .join('\n')}`;
+  return message;
+}

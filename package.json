@@ -1,8 +1,8 @@
 {
-  "name": "root",
+  "name": "snap-lens",
   "version": "0.1.0",
-  "private": true,
-  "description": "",
+  "private": false,
+  "description": "Simple implementation for Lens V2 using Metamask Snaps",
   "homepage": "https://github.com/MatheusDaros/lens-snap",
   "bugs": {
     "url": "https://github.com/MatheusDaros/lens-snap/issues"

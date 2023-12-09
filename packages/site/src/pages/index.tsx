@@ -194,46 +194,11 @@ const Index = () => {
             disabled={!isMetaMaskReady}
           />
         )}
-        {shouldDisplayReconnectButton(state.installedSnap) && (
-          <Card
-            content={{
-              title: 'Reconnect',
-              description:
-                'While connected to a local running snap this button will always be displayed in order to update the snap if a change is made.',
-              button: (
-                <ReconnectButton
-                  onClick={handleConnectClick}
-                  disabled={!state.installedSnap}
-                />
-              ),
-            }}
-            disabled={!state.installedSnap}
-          />
-        )}
-        <Card
-          content={{
-            title: 'Send Hello message',
-            description:
-              'Display a custom message within a confirmation screen in MetaMask.',
-            button: (
-              <SendHelloButton
-                onClick={handleSendHelloClick}
-                disabled={!state.installedSnap}
-              />
-            ),
-          }}
-          disabled={!state.installedSnap}
-          fullWidth={
-            isMetaMaskReady &&
-            Boolean(state.installedSnap) &&
-            !shouldDisplayReconnectButton(state.installedSnap)
-          }
-        />
         <Card
           content={{
             title: 'View my lens handles',
             description:
-              'Display your lens handles within a confirmation screen in MetaMask.',
+              'Display your lens handles within an alert screen in MetaMask.',
             button: (
               <ViewLensHandleButton
                 onClick={handleSendLensHandleClick}
@@ -248,7 +213,7 @@ const Index = () => {
           content={{
             title: 'View my lens profiles',
             description:
-              'Display your lens profiles within a confirmation screen in MetaMask.',
+              'Display your lens profiles within an alert screen in MetaMask.',
             button: (
               <ViewLensProfileButton
                 onClick={handleSendLensProfileClick}
