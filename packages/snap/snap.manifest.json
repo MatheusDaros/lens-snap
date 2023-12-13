@@ -7,7 +7,7 @@
     "url": "https://github.com/MatheusDaros/lens-snap.git"
   },
   "source": {
-    "shasum": "cjQOZrpfOzTP91YF8sQoVEbLdJHDduix3G01osgcoa0=",
+    "shasum": "7TKi5O93sL7rqMTGM5eJFORiUBS5RmF9kTH/M0zNYWQ=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",
@@ -19,7 +19,6 @@
   },
   "initialPermissions": {
     "snap_dialog": {},
-    "snap_notify": {},
     "endowment:rpc": {
       "dapps": true,
       "snaps": false

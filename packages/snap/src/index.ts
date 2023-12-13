@@ -102,67 +102,73 @@ export const onTransaction: OnTransactionHandler = async ({ transaction }) => {
 };
 
 function displayHandles(response: string | string[]) {
-  const parsedResponse =
+  const parsedResponses =
     typeof response === 'string'
       ? [JSON.parse(response)]
       : response.map((r) => JSON.parse(r));
-  if (parsedResponse.length === 0) {
-    return 'No handles found';
-  }
-  const message = `Found ${parsedResponse.length} handle${
-    parsedResponse.length > 1 ? 's' : ''
-  }:\n ${parsedResponse
-    .map(
-      (handle, index) =>
-        `${++index}: ${
-          handle.data.ownedHandles.items[0].suggestedFormatted.localName
-        }\n (${handle.data.ownedHandles.items[0].suggestedFormatted.full})`,
-    )
-    .join('\n')}`;
-  return message;
-}
-
-function displayProfiles(response: string) {
-  const parsedResponse = JSON.parse(response);
-  const items = parsedResponse.data.profiles.items;
+  const items = parsedResponses
+    .flatMap((response: any) => response?.data?.ownedHandles?.items || [])
   if (items.length === 0) {
     return 'No handles found';
   }
+  const message = `Found ${items.length} handle${
+    items.length > 1 ? 's' : ''
+  }:\n\n ${items
+    .map(
+      (item, index) =>
+        `--Handle number ${++index}: ${item.suggestedFormatted?.localName}\n\n (${
+          item.suggestedFormatted?.full
+        })`,
+    )
+    .join('\n\n')}`;
+  return message;
+}
+
+function displayProfiles(response: string | string[]) {
+  const parsedResponses =
+    typeof response === 'string'
+      ? [JSON.parse(response)]
+      : response.map((r) => JSON.parse(r));
+  const items = parsedResponses
+    .flatMap((response: any) => response?.data?.profiles?.items || [])
+  if (items.length === 0) {
+    return 'No profiles found';
+  }
   const message = `Found ${items.length} profile${
     items.length > 1 ? 's' : ''
-  }:\n ${items
+  }:\n\n ${items
     .map(
-      (profile: any, index: any) =>
-        `${++index}:\n Name: ${profile.metadata.displayName}\nBio: ${
-          profile.metadata.bio
-        }\nPicture: ${profile.metadata.picture.raw.uri}\nCover Picture: ${
-          profile.metadata.coverPicture.raw.uri
-        }\nHandle: ${
-          profile.handle.suggestedFormatted.full
-        }\nHandle Contract: ${
-          profile.handle.linkedTo.contract.address
-        }\nHandle NFT Token ID: ${
-          profile.handle.linkedTo.nftTokenId
-        }\nHandle Owned By: ${profile.handle.ownedBy}\nHandle ID: ${
-          profile.handle.id
-        }\nHandle Full Handle: ${
-          profile.handle.fullHandle
-        }\nHandle Namespace: ${profile.handle.namespace}\nHandle Local Name: ${
-          profile.handle.localName
-        }\nHandle Suggested Formatted Full: ${
-          profile.handle.suggestedFormatted.full
-        }\nHandle Suggested Formatted Local Name: ${
-          profile.handle.suggestedFormatted.localName
-        }\nHandle Linked To Contract Address: ${
-          profile.handle.linkedTo.contract.address
-        }\nHandle Linked To Contract Chain ID: ${
-          profile.handle.linkedTo.contract.chainId
-        }\nHandle Linked To NFT Token ID: ${
-          profile.handle.linkedTo.nftTokenId
-        }\nHandle Owned By: ${profile.handle.ownedBy}\nSignless: ${
+      (profile, index) =>
+        `--Profile number ${++index}\n\n \n\nName: ${profile.metadata?.displayName}\n\nBio: ${
+          profile.metadata?.bio
+        }\n\nPicture: ${profile.metadata?.picture?.raw?.uri}\n\nCover Picture: ${
+          profile.metadata?.coverPicture?.raw?.uri
+        }\n\nHandle: ${
+          profile.handle?.suggestedFormatted?.full
+        }\n\nHandle Contract: ${
+          profile.handle?.linkedTo?.contract?.address
+        }\n\nHandle NFT Token ID: ${
+          profile.handle?.linkedTo?.nftTokenId
+        }\n\nHandle Owned By: ${profile.handle?.ownedBy}\n\nHandle ID: ${
+          profile.handle?.id
+        }\n\nHandle Full Handle: ${
+          profile.handle?.fullHandle
+        }\n\nHandle Namespace: ${profile.handle?.namespace}\n\nHandle Local Name: ${
+          profile.handle?.localName
+        }\n\nHandle Suggested Formatted Full: ${
+          profile.handle?.suggestedFormatted?.full
+        }\n\nHandle Suggested Formatted Local Name: ${
+          profile.handle?.suggestedFormatted?.localName
+        }\n\nHandle Linked To Contract Address: ${
+          profile.handle?.linkedTo?.contract?.address
+        }\n\nHandle Linked To Contract Chain ID: ${
+          profile.handle?.linkedTo?.contract?.chainId
+        }\n\nHandle Linked To NFT Token ID: ${
+          profile.handle?.linkedTo?.nftTokenId
+        }\n\nHandle Owned By: ${profile.handle?.ownedBy}\n\nSignless: ${
           profile.signless
-        }\nSponsor: ${profile.sponsor}\n`,
+        }\n\nSponsor: ${profile.sponsor}\n\n`,
     )
-    .join('\n')}`;
+    .join('\n\n')}`;
   return message;
 }
